@@ -1,0 +1,11 @@
+gStats = {soilType, shadeType};
+% soilType = {Normal, Clay, Dry};
+% shadeType = {fullShade, halfShade, fullSun};
+limit = 5;
+
+gardenStats = [|
+	Normal, fullShade |
+  Normal, fullShade |
+	Normal, fullShade |
+	Normal, fullShade |
+	Normal, fullShade |];
