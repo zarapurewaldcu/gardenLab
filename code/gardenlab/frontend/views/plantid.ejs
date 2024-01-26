@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <title>Plant Identification - Garden Planner</title>
+</head>
+<body>
+    <nav class="container-fluid">
+        <ul>
+            <li><strong>Garden Planner</strong></li>
+        </ul>
+        <ul>
+            <li><a href="/">Virtual Garden Planner</a></li>
+            <li><a href="/plantid" class="active">Plant ID Tool</a></li>
+            <li><a href="#plant-welfare-checker">Plant Welfare Checker</a></li>
+            <li><a href="#" role="button">Account</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <section>
+            <hgroup>
+                <h2>Plant Identification</h2>
+                <h3>Upload a picture to identify a plant and get care instructions for it</h3>
+            </hgroup>
+            <form action="/submit-plant-photo" method="post" enctype="multipart/form-data">
+                <label for="plant-image-upload">Upload Plant Image:</label>
+                <input type="file" id="plant-image-upload" name="plant-image" accept="image/*">
+                <button type="submit">Identify Plant</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="container">
+        <small>
+            <a href="#">Privacy Policy</a> • <a href="#">Terms of Use</a>
+        </small>
+    </footer>
+</body>
+</html>
