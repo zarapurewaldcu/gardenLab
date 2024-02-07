@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Identification Results</title>
+</head>
+<body>
+    <h1>Plant Identification Results</h1>
+    
+    <% if (data.input && data.input.images) { %> <!--Check for an uploaded image-->
+        <div>
+            <h2>Uploaded Image:</h2>
+            <img src="<%= data.input.images[0] %>" alt="Uploaded Image" style="width: 100%; max-width: 500px;">
+        </div>
+    <% } %>
+    
+    <% if (data.result && data.result.classification && data.result.classification.suggestions) { %> <!--Ensure that suggestions are available-->
+        <!--If a picture is determined not to contain a plant (is_plant { probability: 0, binary: false, threshold: 0.5 })  Then suggestions will not be given-->
+		<div>
+            <h2>Possible Identifications:</h2>
+            <ul>
+                <% data.result.classification.suggestions.slice(0, 3).forEach(function(suggestion) { %>  <!-- Displays three possible suggestions for uploaded photo-->
+                    <li>
+                        <strong>Plant Name:</strong> <%= suggestion.name %><br>
+                        <strong>Probability:</strong> <%= (suggestion.probability * 100).toFixed(2) %>%
+                        <% if (suggestion.similar_images && suggestion.similar_images.length > 0) { %>
+                            <div>
+                                <h3>Similar Image:</h3>
+                                <img src="<%= suggestion.similar_images[0].url %>" alt="Similar Image" style="width: 100%; max-width: 300px;">
+                            </div>
+                        <% } %>
+                    </li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } else { %>
+        <p>No identification results available.</p>
+    <% } %>
+</body>
+</html>
