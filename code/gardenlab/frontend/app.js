@@ -30,10 +30,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/plantid', plantidRouter);
+app.use('/plantidresults', plantidRouter);
 
 
-
-app.post('/submit-plant-photo', upload.single('plant-image'), async (req, res) => {
+app.post('/submit-plant-photo-for-id', upload.single('plant-image'), async (req, res) => {
     // Create a new instance of FormData
     var data = new FormData();
     // Append the file using the path from the uploaded file and additional fields
@@ -46,7 +46,7 @@ app.post('/submit-plant-photo', upload.single('plant-image'), async (req, res) =
         method: 'post',
         url: 'https://plant.id/api/v3/identification?details=common_names,url,description,taxonomy,rank,gbif_id,inaturalist_id,image,synonyms,edible_parts,watering,propagation_methods&language=en',
         headers: { 
-            'Api-Key': 'your_api_key', // FIND A WAY TO USE A VARIABLE FOR API KEY LATER
+            'Api-Key': 'INSERTAPIKEY', // FIND A WAY TO USE A VARIABLE FOR API KEY LATER
             ...data.getHeaders() // Spread operator to append FormData headers
         },
         data: data,
@@ -58,7 +58,10 @@ app.post('/submit-plant-photo', upload.single('plant-image'), async (req, res) =
         .then(function (response) {
             console.log(JSON.stringify(response.data));
             // Send response back to client
-            res.json(response.data);
+            //res.json(response.data);
+			//displayImages(response.data);
+			console.log(response.data);
+			res.render('plantidresults', { data: response.data });
         })
         .catch(function (error) {
             console.log(error);
@@ -81,5 +84,6 @@ app.use(function(req, res, next) {
 	res.status(err.status || 500);
 	res.render('error');
   });
+
 
 module.exports = app;
