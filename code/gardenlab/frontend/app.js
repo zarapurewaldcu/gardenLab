@@ -60,8 +60,14 @@ app.post('/submit-plant-photo-for-id', upload.single('plant-image'), async (req,
             // Send response back to client
             //res.json(response.data);
 			//displayImages(response.data);
-			console.log(response.data);
 			res.render('plantidresults', { data: response.data });
+			fs.unlink(req.file.path, (err) => { // delete the image file after it is posted and the new page is rendered.
+                if (err) {
+                    console.error("Error deleting the file:", err);
+                    return;
+                }
+                console.log("File deleted successfully:", req.file.path);
+            });
         })
         .catch(function (error) {
             console.log(error);
