@@ -8,6 +8,7 @@ const axios = require('axios');
 const fs = require('fs');
 const FormData = require('form-data');
 var router = express.Router();
+require("dotenv").config();
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -46,7 +47,7 @@ app.post('/submit-plant-photo-for-id', upload.single('plant-image'), async (req,
         method: 'post',
         url: 'https://plant.id/api/v3/identification?details=common_names,url,description,taxonomy,rank,gbif_id,inaturalist_id,image,synonyms,edible_parts,watering,propagation_methods&language=en',
         headers: { 
-            'Api-Key': 'INSERTAPIKEY', // FIND A WAY TO USE A VARIABLE FOR API KEY LATER
+            'Api-Key': process.env.PLANTID_API_KEY, // Using dotenv to hide api key
             ...data.getHeaders() // Spread operator to append FormData headers
         },
         data: data,
