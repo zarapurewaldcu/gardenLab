@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Health Assessment Results</title>
+</head>
+<body>
+    <h1>Plant Health Assessment Results</h1>
+    
+    <% if (data.input && data.input.images) { %> <!-- Check for an uploaded image -->
+        <div>
+            <h2>Uploaded Image:</h2>
+            <img src="<%= data.input.images[0] %>" alt="Uploaded Image" style="width:  100%; max-width:  500px;">
+        </div>
+    <% } %>
+    
+    <% if (data.result && data.result.disease && data.result.disease.suggestions) { %> <!-- Ensure that disease suggestions are available -->
+        <div>
+            <h2>Disease Assessments:</h2>
+            <ul class="assessments">
+                <% data.result.disease.suggestions.slice(0,  3).forEach(function(disease) { %> <!-- Display three disease assessments -->
+                    <li class="assessment">
+                        <h3><%= disease.name %></h3>
+                        <p>Probability: <%= (disease.probability *  100).toFixed(2) %>%</p>
+                        <% if (disease.similar_images && disease.similar_images.length >  0) { %>
+                            <div>
+                                <h4>Similar Images:</h4>
+                                <% disease.similar_images.slice(0,  3).forEach(function(image) { %> <!-- Display up to three similar images -->
+                                    <img src="<%= image.url %>" alt="Similar Image" class="assessment-image">
+                                <% }); %>
+                            </div>
+                        <% } %>
+						<% if (data.result.disease.suggestions.details && data.result.disease.suggestions.details.treatment) { %> <!-- Check if treatment details are available -->
+                            <div>
+                                <h3>Treatment Suggestions:</h3>
+                                <ul>
+                                    <% if (data.result.disease.suggestions.details.treatment.chemical) { %>
+                                        <li><strong>Chemical Treatment:</strong> <%= data.result.disease.suggestions.details.treatment.chemical.join(', ') %></li>
+                                    <% } %>
+                                    <% if (data.result.disease.suggestions.details.treatment.biological) { %>
+                                        <li><strong>Biological Treatment:</strong> <%= data.result.disease.suggestions.details.treatment.biological.join(', ') %></li>
+                                    <% } %>
+                                    <% if (data.result.disease.suggestions.details.treatment.prevention) { %>
+                                        <li><strong>Prevention Measures:</strong> <%= data.result.disease.suggestions.details.treatment.prevention.join(', ') %></li>
+                                    <% } %>
+                                </ul>
+                            </div>
+                        <% } %>
+                    </li>
+                <% }); %>
+            </ul>
+        </div>
+    <% } else { %>
+        <p>No disease assessment results available.</p>
+    <% } %>
+</body>
+</html>
