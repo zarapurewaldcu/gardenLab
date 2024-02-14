@@ -1,32 +1,48 @@
+include "alldifferent.mzn";
 enum plants;
-enum soilType;
-enum plantType;
-enum shadeType;
-enum season;
-enum pStats;
-enum gStats;
+% enum soilType;
+% enum plantType;
+% enum shadeType;
+% enum season;
+% enum pStats;
+% enum gStats;
 
 int: limit;
 
-array[plants, pStats] of int: plantStats;
+enum pStats = {plantType, soilType, shadeType, watering, season}; %What each column represents on statsPerPlant
+enum gStats = {gardenSoilType, gardenShadeType}; %What each column represents on statsPerPlot
 
-
-array[1..limit, gStats] of int: gardenStats;
-array[1..limit] of var plants: chosenPlants;
-
+array[plants, pStats] of int: statsPerPlant; 
+array[1..limit, gStats] of int: statsPerPlot;
 
 % Create a mapping from enum values to strings
 array[plants] of string: plantNames = ["Rose", "Tulip", "Daisy", "Orchid", "Lavender", "Sunflower", "Walnut", "Iris", "Basil", "Fern"];
 
+array[1..limit] of var plants: chosenPlants; % Final list of the plant that were chosen 
+
+% plantType = {Fruit, Vegetable, Tree, Herb};
+% soilType = {Normal, Clay, Dry};
+% shadeType = {fullShade, halfShade, fullSun};
+% watering = {Rare, Occasional, SemiFrequent, Frequent, Often};
+% season = {Spring, Summer, Autumn, Winter};
+
+
+
+
 
 % Constraints
+% constraint forall(i in 1..limit)(
+%     plantStats[chosenPlants[i], soilType] = gardenStats[i, soilType]/\
+%     plantStats[chosenPlants[i], shadeType] = gardenStats[i, shadeType]
+% );
+constraint alldifferent(chosenPlants);
 constraint forall(i in 1..limit)(
-    plantStats[chosenPlants[i], soilType] = gardenStats[i, soilType]/\
-    plantStats[chosenPlants[i], shadeType] = gardenStats[i, shadeType]
+    statsPerPlant[chosenPlants[i], soilType] = statsPerPlot[i, gardenSoilType]/\
+    statsPerPlant[chosenPlants[i], shadeType] = statsPerPlot[i, gardenShadeType]
 );
 
 % Solve statement
 solve satisfy;
 
 % Output
-output ["Chosen plants: "] ++ [plantNames[chosenPlants[i]] ++ " " | i in 1..limit];
+% output ["Chosen plants: "] ++ [plantNames[chosenPlants[i]] ++ " " | i in 1..limit];

@@ -1,20 +1,38 @@
 plants = { Rose, Tulip, Daisy, Orchid, Lavender, Sunflower, Walnut, Iris, Basil, Fern };
-pStats = {plantName, plantType, soilType, shadeType, watering, season};
-plantType = {Fruit, Vegetable, Tree, Herb};
-soilType = {Normal, Clay, Dry};
-shadeType = {fullShade, halfShade, fullSun};
-watering = {Rare, Occasional, SemiFrequent, Frequent, Often};
-season = {Spring, Summer, Autumn, Winter};
+% pStats = {plantName, plantType, soilType, shadeType, watering, season};
+% plantType = {Fruit, Vegetable, Tree, Herb};
+% soilType = {Normal, Clay, Dry};
+% shadeType = {fullShade, halfShade, fullSun};
+% watering = {Rare, Occasional, SemiFrequent, Frequent, Often};
+% season = {Spring, Summer, Autumn, Winter};
 
-plantStats = [|
-    Rose, Fruit, Clay, FullSun, Frequent, Summer |  % Rose
-    Tulip, Vegetable, Normal, FullShade, Occasional, Spring |  % Tulip
-    Daisy, Herb, Dry, HalfShade, Rare, Autumn |  % Daisy
-    Orchid, Fruit, Clay, FullSun, Often, Summer |  % Orchid
-    Lavender, Vegetable, Normal, FullShade, SemiFrequent, Winter |  % Lavender
-    Sunflower, Tree, Dry, HalfShade, Occasional, Spring |  % Sunflower
-    Walnut, Herb, Normal, FullSun, Frequent, Autumn |  % Walnut
-    Iris, Fruit, Clay, HalfShade, Rare, Winter |  % Iris
-    Basil, Vegetable, Dry, FullShade, Often, Spring |  % Basil
-    Fern, Tree, Normal, FullSun, SemiFrequent, Summer |  % Fern
-];
+% plantStats = [|
+%     Rose, Fruit, Clay, FullSun, Frequent, Summer |  % Rose
+%     Tulip, Vegetable, Normal, FullShade, Occasional, Spring |  % Tulip
+%     Daisy, Herb, Dry, HalfShade, Rare, Autumn |  % Daisy
+%     Orchid, Fruit, Clay, FullSun, Often, Summer |  % Orchid
+%     Lavender, Vegetable, Normal, FullShade, SemiFrequent, Winter |  % Lavender
+%     Sunflower, Tree, Dry, HalfShade, Occasional, Spring |  % Sunflower
+%     Walnut, Herb, Normal, FullSun, Frequent, Autumn |  % Walnut
+%     Iris, Fruit, Clay, HalfShade, Rare, Winter |  % Iris
+%     Basil, Vegetable, Dry, FullShade, Often, Spring |  % Basil
+%     Fern, Tree, Normal, FullSun, SemiFrequent, Summer |  % Fern
+% ];
+
+%% plantType: 1 = fruit, 2 = vegetable, 3 = flower, 4 = tree, 5 = herb
+%% soilType: 1 = normal, 2 = clay, 3 = dry
+%% shadeType: 1 = fullShade, 2 = halfShade, 3 = fullSun
+%% watering: 1 = occasional, 2 = semiFrequent, 3 = often
+%% season: 1 = spring, 2 = summer, 3 = autumn, 4 = winter
+
+statsPerPlant = [|
+    3,  1,  3,  2,  1| % Rose
+    3,  1,  2,  3,  2| % Tulip
+    3,  1,  3,  2,  1| % Daisy
+    3,  1,  3,  2,  1| % Orchid
+    3,  1,  3,  2,  1| % Lavender
+    3,  1,  3,  2,  1| % Sunflower
+    4,  2,  3,  2,  1| % Walnut (tree, clay soil)
+    3,  1,  3,  2,  1| % Iris
+    5,  1,  3,  2,  1| % Basil (herb)
+    5,  1,  3,  2,  1|]; % Fern (herb)
