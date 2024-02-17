@@ -7,33 +7,52 @@ const multer = require('multer');
 const axios = require('axios');
 const fs = require('fs');
 const FormData = require('form-data');
+const mongoose = require('mongoose');
 var router = express.Router();
 require("dotenv").config();
 
 var indexRouter = require('./routes/index');
+var virtualRouter = require('./routes/virtualgarden');
 var usersRouter = require('./routes/users');
 var plantidRouter = require('./routes/plantid');
 var planthealthRouter = require('./routes/planthealth');
+var userRouter = require('./routes/user');
 
 var app = express();
+
 const upload = multer({ dest: 'uploads/' }); // Temporarily save files to "uploads" directory
 
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => console.log('Connected to MongoDB...'))
+  .catch(err => console.error('Could not connect to MongoDB:', err));
+  
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+//app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '../frontend/views'));
 app.set('view engine', 'ejs');
+
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../frontend/public')));
 
-app.use('/', indexRouter);
+
+
+app.use('/index', indexRouter);
+app.use('/virtualgarden', virtualRouter);
 app.use('/users', usersRouter);
 app.use('/plantid', plantidRouter);
 //app.use('/plantidresults', plantidRouter);
 app.use('/planthealth', planthealthRouter);
+app.use('/api/user', userRouter);
+
 
 
 app.post('/submit-plant-photo-for-id', upload.single('plant-image'), async (req, res) => {
@@ -55,6 +74,8 @@ app.post('/submit-plant-photo-for-id', upload.single('plant-image'), async (req,
         data: data,
         maxBodyLength: Infinity,
     };
+
+
 
     // Use axios to send the POST request
     axios(configplantid)

@@ -1,8 +1,38 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
 }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 50px); /* Default 4 columns */
+  grid-template-rows: repeat(3, 50px); /* Default 3 rows */
+  grid-gap: 0;
+
+}
+
+.grid div {
+  border: 1px solid #ccc;
+  height: 50px;
+  width: 50px;
+  background-color: #f9f9f9;
+  grid-gap: 0;
+  
+}
+.grid-cell {
+  width: 50px; /* Set the width of the grid cells */
+  height: 50px; /* Set the height of the grid cells */
+  border: 1px solid #ccc; /* Give the cells a border */
+  display: flex; /* Use flexbox to center content */
+  align-items: center; /* Center content vertically */
+  justify-content: center; /* Center content horizontally */
+}
+
+.grid-cell img {
+  max-width: 100%; /* Ensure the image is not larger than the cell */
+  max-height: 100%; /* Ensure the image is not taller than the cell */
+}
+
