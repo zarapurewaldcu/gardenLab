@@ -8,11 +8,13 @@ const axios = require('axios');
 const fs = require('fs');
 const FormData = require('form-data');
 const mongoose = require('mongoose');
+const MiniZinc = require('minizinc');
 var router = express.Router();
 require("dotenv").config();
 
 var indexRouter = require('./routes/index');
 var virtualRouter = require('./routes/virtualgarden');
+var gardenplannerformRouter = require('./routes/gardenplannerform');
 var usersRouter = require('./routes/users');
 var plantidRouter = require('./routes/plantid');
 var planthealthRouter = require('./routes/planthealth');
@@ -47,6 +49,7 @@ app.use(express.static(path.join(__dirname, '../frontend/public')));
 
 app.use('/index', indexRouter);
 app.use('/virtualgarden', virtualRouter);
+app.use('/gardenplannerform', gardenplannerformRouter);
 app.use('/users', usersRouter);
 app.use('/plantid', plantidRouter);
 //app.use('/plantidresults', plantidRouter);
@@ -143,11 +146,44 @@ app.post('/submit-plant-photo-for-assessment', upload.single('plant-image'), asy
         });
 });
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-	next(createError(404));
-  });
+// Minizinc related code in this file from https://www.npmjs.com/package/minizinc 
+//WIP
+// MiniZinc.init({
+// 	// Executable name
+// 	minizinc: 'minizinc',
+// 	// Search paths (can omit to use PATH)
+// 	minizincPaths: ['minizinc/']
+//   });
+
+// const model = new MiniZinc.Model();
+// // Add a file with a given name and string contents
+// model.addFile('test.mzn', 'var 1..3: x; int: y;');
+// // Add model code from a string
+// model.addString('int: z;');
+// // Add data in DZN format
+// model.addDznString('y = 1;');
+// // Add data from a JSON object
+// model.addJSON({z: 2});
+
+// const solve = model.solve({
+//   options: {
+//     solver: 'gecode',
+//     'time-limit': 10000,
+//     statistics: true
+//   }
+// });
+
+// // You can listen for events
+// solve.on('solution', solution => console.log(solution));
+// solve.on('statistics', stats => console.log(stats.statistics));
+
+// // And/or wait until complete
+// solve.then(result => {
+//   console.log(result.solution);
+//   console.log(result.statistics);
+// });
   
+
   // error handler
   app.use(function(err, req, res, next) {
 	// set locals, only providing error in development
@@ -159,6 +195,10 @@ app.use(function(req, res, next) {
 	res.render('error');
   });
 
+  // catch 404 and forward to error handler
+app.use(function(req, res, next) {
+	next(createError(404));
+  });
 
 // // catch 404 and forward to error handler
 // app.use(function(req, res, next) {

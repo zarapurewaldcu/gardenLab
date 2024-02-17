@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <title>Garden Planner</title>
+</head>
+<body>
+	<nav class="container-fluid">
+        <ul>
+            <li><strong>Garden Planner</strong></li>
+        </ul>
+        <ul>
+            <li><a href="/index" role="button">Home</a></li>
+            <li><a href="/virtualgarden">Virtual Garden Planner</a></li>
+            <li><a href="/plantid">Plant ID Tool</a></li>
+            <li><a href="/planthealth">Plant Welfare Checker</a></li>
+            <li><a href="/account" role="button">Account</a></li>
+        </ul>
+    </nav>
+    <h2>Garden Planner Form</h2>
+    <form id="gardenForm">
+        <div>
+            <label for="numberOfPlants">Number of types of plants (1-5):</label>
+            <input type="number" id="numberOfPlants" name="numberOfPlants" min="1" max="5" required>
+        </div>
+        <div>
+            <label for="soilType">Soil type:</label>
+            <select id="soilType" name="soilType" required>
+                <option value="normal">Normal</option>
+                <option value="clay">Clay</option>
+                <option value="dry">Dry</option>
+            </select>
+        </div>
+        <div>
+            <label for="shadeType">Shade type:</label>
+            <select id="shadeType" name="shadeType" required>
+                <option value="fullShade">Full Shade</option>
+                <option value="halfShade">Half Shade</option>
+                <option value="fullSun">Full Sun</option>
+            </select>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+	<footer class="container">
+        <small>
+            <a href="#">Privacy Policy</a> • <a href="#">Terms of Use</a>
+        </small>
+    </footer>
+</body>
+</html>
