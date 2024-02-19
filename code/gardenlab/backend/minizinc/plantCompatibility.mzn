@@ -7,9 +7,9 @@ enum plants;
 % enum pStats;
 % enum gStats;
 
-int: limit;
-int: gardenSoilType;
-int: gardenShadeType;
+int: limit = 3;
+int: gardenSoilType = 1;
+int: gardenShadeType = 3;
 
 enum pStats = {plantType, soilType, shadeType, watering, season}; %What each column represents on statsPerPlant
 % enum gStats = {gardenSoilType, gardenShadeType}; %What each column represents on statsPerPlot
