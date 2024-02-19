@@ -8,9 +8,10 @@ const axios = require('axios');
 const fs = require('fs');
 const FormData = require('form-data');
 const mongoose = require('mongoose');
-const MiniZinc = require('minizinc');
 var router = express.Router();
 require("dotenv").config();
+const gardenModel = require('./models/gardenModel');
+//const { solveMiniZincProblem } = require('./models/gardenModel');
 
 var indexRouter = require('./routes/index');
 var virtualRouter = require('./routes/virtualgarden');
@@ -30,6 +31,46 @@ mongoose.connect(process.env.MONGODB_URI, {
   })
   .then(() => console.log('Connected to MongoDB...'))
   .catch(err => console.error('Could not connect to MongoDB:', err));
+  
+
+
+  app.post('/planGarden', (req, res) => {
+	const solve = gardenModel.solve({
+	  options: {
+		solver: 'gecode',
+		'time-limit':  10000,
+		statistics: true,
+		log:true
+	  }
+	});
+
+	solve.on('solution', (solution) => {
+		console.log(solution.output);
+		res.json({solution:solution});
+	  });
+
+	  solve.on('exit', (result) => {
+		console.log(result);
+		// Send the result back to the client
+		res.json({
+		  result: result,
+		});
+	  });
+
+	//   solve.on('trace', (log) => {
+	// 	console.log(log); // Log the solver's log output
+	// 	res.json({log:log});
+	//   });
+	
+	  solve.on('error', (error) => {
+		console.error('An error occurred while solving the model:', error);
+		// Send an error response back to the client
+		res.status(500).send('An error occurred while solving the model.');
+	  });
+  
+  });
+  
+
   
 
 // view engine setup
@@ -146,43 +187,7 @@ app.post('/submit-plant-photo-for-assessment', upload.single('plant-image'), asy
         });
 });
 
-// Minizinc related code in this file from https://www.npmjs.com/package/minizinc 
-//WIP
-// MiniZinc.init({
-// 	// Executable name
-// 	minizinc: 'minizinc',
-// 	// Search paths (can omit to use PATH)
-// 	minizincPaths: ['minizinc/']
-//   });
 
-// const model = new MiniZinc.Model();
-// // Add a file with a given name and string contents
-// model.addFile('test.mzn', 'var 1..3: x; int: y;');
-// // Add model code from a string
-// model.addString('int: z;');
-// // Add data in DZN format
-// model.addDznString('y = 1;');
-// // Add data from a JSON object
-// model.addJSON({z: 2});
-
-// const solve = model.solve({
-//   options: {
-//     solver: 'gecode',
-//     'time-limit': 10000,
-//     statistics: true
-//   }
-// });
-
-// // You can listen for events
-// solve.on('solution', solution => console.log(solution));
-// solve.on('statistics', stats => console.log(stats.statistics));
-
-// // And/or wait until complete
-// solve.then(result => {
-//   console.log(result.solution);
-//   console.log(result.statistics);
-// });
-  
 
   // error handler
   app.use(function(err, req, res, next) {
@@ -200,20 +205,5 @@ app.use(function(req, res, next) {
 	next(createError(404));
   });
 
-// // catch 404 and forward to error handler
-// app.use(function(req, res, next) {
-// 	next(createError(404));
-//   });
-  
-//   // error handler
-//   app.use(function(err, req, res, next) {
-// 	// set locals, only providing error in development
-// 	res.locals.message = err.message;
-// 	res.locals.error = req.app.get('env') === 'development' ? err : {};
-  
-// 	// render the error page
-// 	res.status(err.status || 500);
-// 	res.render('error');
-//   });
 
 module.exports = app;

@@ -20,7 +20,7 @@
 		<div>
             <h2>Possible Identifications:</h2>
             <ul>
-                <% data.result.classification.suggestions.slice(0, 3).forEach(function(suggestion) { %>  <!-- Displays three possible suggestions for uploaded photo-->
+                <% data.result.classification.suggestions.slice(0, 3).forEach(function(suggestion) { %>  <!-- Displays max three possible suggestions for uploaded photo-->
                     <li>
                         <strong>Plant Name:</strong> <%= suggestion.name %><br>
                         <strong>Probability:</strong> <%= (suggestion.probability * 100).toFixed(2) %>%
