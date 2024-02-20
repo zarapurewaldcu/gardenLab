@@ -1,14 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User'); 
 
 require('dotenv').config();
 
-router.get('/register', (req, res) => {
-    res.render('createaccount'); // Renders the createaccount.ejs file
-  });
 
 router.get('/', (req, res) => {
     res.render('createaccount'); // This assumes your EJS file is named createaccount.ejs
@@ -26,14 +22,12 @@ router.post('/', async (req, res) => {
     }
 
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
 
     // creates new user
     user = new User({
       username,
       email,
-      password: hashedPassword
+      password: password
     });
 
     await user.save();
