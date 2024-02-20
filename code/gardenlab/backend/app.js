@@ -98,6 +98,7 @@ app.use('/plantid', plantidRouter);
 app.use('/planthealth', planthealthRouter);
 app.use('/account', accountRouter);
 app.use('/createaccount', createaccountRouter);
+app.use('/gardenplannerform', gardenplannerformRouter);
 
 
 

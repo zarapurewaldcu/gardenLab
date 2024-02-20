@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Virtual Garden Planner</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
   <link rel="stylesheet" href="stylesheets/style.css">
   <script src="/javascripts/gardenplanner.js"></script>
 </head>
@@ -21,17 +21,11 @@
   </ul>
 </nav>
 
+<main class="container">
+	<section>
 <div id="gardenGrid" class="grid"></div>
-
-// sample grid layout when page is loaded
-<label for="width">Width:</label>
-<input type="number" id="width" value="4">
-<label for="height">Height:</label>
-<input type="number" id="height" value="3">
-<button type="button" id="updateGrid">Update Grid</button>
-
-
-// Draggable Plants
+</section>
+<!-- Draggable Plants -->
 <div id="plants">
   <img src="images/rose.webp" id="plant-rose" class="plant" draggable="true" width="50px" height="50px">
   <img src="images/lavender.webp" id="plant-lavender" class="plant" draggable="true" width="50px" height="50px">
@@ -44,9 +38,19 @@
   <img src="images/fern.webp" id="plant-fern" class="plant" draggable="true" width="50px" height="50px">
 </div>
 
+<!-- sample grid layout when page is loaded -->
+<label for="width">Width:</label>
+<input type="number" id="width" value="4">
+<label for="height">Height:</label>
+<input type="number" id="height" value="3">
+<button type="button" id="updateGrid">Update Grid</button>
+
+
+
+
 <!-- Save Button -->
 <button id="saveGarden" >Save Garden</button>
 
-  
+</main>
 </body>
 </html>
