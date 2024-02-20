@@ -10,9 +10,12 @@ const FormData = require('form-data');
 const mongoose = require('mongoose');
 var router = express.Router();
 require("dotenv").config();
+const gardenModel = require('./models/gardenModel');
+//const { solveMiniZincProblem } = require('./models/gardenModel');
 
 var indexRouter = require('./routes/index');
 var virtualRouter = require('./routes/virtualgarden');
+var gardenplannerformRouter = require('./routes/gardenplannerform');
 var usersRouter = require('./routes/users');
 var plantidRouter = require('./routes/plantid');
 var planthealthRouter = require('./routes/planthealth');
@@ -32,6 +35,46 @@ mongoose.connect(process.env.MONGODB_URI, {
   .catch(err => console.error('Could not connect to MongoDB:', err));
   
 
+
+  app.post('/planGarden', (req, res) => {
+	const solve = gardenModel.solve({
+	  options: {
+		solver: 'gecode',
+		'time-limit':  10000,
+		statistics: true,
+		log:true
+	  }
+	});
+
+	solve.on('solution', (solution) => {
+		console.log(solution.output);
+		res.json({solution:solution});
+	  });
+
+	  solve.on('exit', (result) => {
+		console.log(result);
+		// Send the result back to the client
+		res.json({
+		  result: result,
+		});
+	  });
+
+	//   solve.on('trace', (log) => {
+	// 	console.log(log); // Log the solver's log output
+	// 	res.json({log:log});
+	//   });
+	
+	  solve.on('error', (error) => {
+		console.error('An error occurred while solving the model:', error);
+		// Send an error response back to the client
+		res.status(500).send('An error occurred while solving the model.');
+	  });
+  
+  });
+  
+
+  
+
 // view engine setup
 //app.set('views', path.join(__dirname, 'views'));
 app.set('views', path.join(__dirname, '../frontend/views'));
@@ -49,7 +92,6 @@ app.use(express.static(path.join(__dirname, '../frontend/public')));
 
 app.use('/', indexRouter);
 app.use('/virtualgarden', virtualRouter);
-
 app.use('/users', usersRouter);
 app.use('/plantid', plantidRouter);
 //app.use('/plantidresults', plantidRouter);
@@ -147,11 +189,8 @@ app.post('/submit-plant-photo-for-assessment', upload.single('plant-image'), asy
         });
 });
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-	next(createError(404));
-  });
-  
+
+
   // error handler
   app.use(function(err, req, res, next) {
 	// set locals, only providing error in development
@@ -163,21 +202,10 @@ app.use(function(req, res, next) {
 	res.render('error');
   });
 
+  // catch 404 and forward to error handler
+app.use(function(req, res, next) {
+	next(createError(404));
+  });
 
-// // catch 404 and forward to error handler
-// app.use(function(req, res, next) {
-// 	next(createError(404));
-//   });
-  
-//   // error handler
-//   app.use(function(err, req, res, next) {
-// 	// set locals, only providing error in development
-// 	res.locals.message = err.message;
-// 	res.locals.error = req.app.get('env') === 'development' ? err : {};
-  
-// 	// render the error page
-// 	res.status(err.status || 500);
-// 	res.render('error');
-//   });
 
 module.exports = app;
