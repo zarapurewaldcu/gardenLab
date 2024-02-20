@@ -3,56 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plant Health Assessment Results</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+	<title>Plant Health Assessment Results</title>
 </head>
 <body>
+	<nav class="container-fluid">
+		<ul>
+			<li><strong>Garden Planner</strong></li>
+		</ul>
+		<ul>
+			<li><a href="/index" role="button">Home</a></li>
+			<li><a href="/virtualgarden">Virtual Garden Planner</a></li>
+			<li><a href="/plantid">Plant ID Tool</a></li>
+			<li><a href="/planthealth">Plant Welfare Checker</a></li>
+			<li><a href="/account" role="button">Account</a></li>
+		</ul>
+	</nav>
+	<main class="container">
+		<section>
     <h1>Plant Health Assessment Results</h1>
     
     <% if (data.input && data.input.images) { %> <!-- Check for an uploaded image -->
         <div>
-            <h2>Uploaded Image:</h2>
+            <h3>Uploaded Image:</h3>
             <img src="<%= data.input.images[0] %>" alt="Uploaded Image" style="width: 100%; max-width: 500px;">
         </div>
     <% } %>
+	<hr>
     
     <% if (data.result && data.result.disease && data.result.disease.suggestions) { %> <!-- Ensure that disease suggestions are available -->
         <div>
-            <h2>Disease Assessments:</h2>
-            <ul class="assessments">
+            <h4>Disease Assessments:</h4>
+            <div class="row">
                 <% data.result.disease.suggestions.forEach(function(disease) { %> <!-- Display disease assessments -->
-                    <li class="assessment">
-                        <h3><%= disease.name %></h3>
-                        <p>Probability: <%= (disease.probability * 100).toFixed(2) %>%</p>
-                        <% if (disease.similar_images && disease.similar_images.length > 0) { %>
-                            <div>
-                                <h4>Similar Images:</h4>
-                                <% disease.similar_images.slice(0, 3).forEach(function(image) { %> <!-- Display up to three similar images -->
-                                    <img src="<%= image.url %>" alt="Similar Image" class="assessment-image">
-                                <% }); %>
-                            </div>
-                        <% } %>
-                        <% if (disease.details && disease.details.treatment) { %> <!-- Check if treatment details are available -->
-                            <div>
-                                <h3>Treatment Suggestions:</h3>
-                                <ul>
-                                    <% if (disease.details.treatment.chemical && disease.details.treatment.chemical.length > 0) { %> <!-- Check if chemical treatments are available -->
-                                        <li><strong>Chemical Treatment:</strong> <%= disease.details.treatment.chemical.join(', ') %></li>
-                                    <% } %>
-                                    <% if (disease.details.treatment.biological && disease.details.treatment.biological.length > 0) { %> <!-- Check if biological treatments are available -->
-                                        <li><strong>Biological Treatment:</strong> <%= disease.details.treatment.biological.join(', ') %></li>
-                                    <% } %>
-									<% if (disease.details.treatment.prevention && disease.details.treatment.prevention.length > 0) { %> <!-- Check if prevention treatments are available -->
-                                        <li><strong>Preventative Measures:</strong> <%= disease.details.treatment.prevention.join(', ') %></li>
-                                    <% } %>
+                    <div class="col-md-6"> 
+                        <div class="card" style="width: 18rem;">
+                            <% if (disease.similar_images && disease.similar_images.length > 0) { %>
+                                <img class="card-img-top" src="<%= disease.similar_images[0].url %>" alt="Similar Image" style="width: 100%;">
+                            <% } %>
+                            
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><strong>Disease Name:</strong> <%= disease.name %></li>
+                                    <li class="list-group-item"><strong>Probability:</strong> <%= (disease.probability * 100).toFixed(2) %>%</li>
                                 </ul>
+                                
+                                <% if (disease.details && disease.details.treatment) { %> <!-- Check if treatment details are available -->
+                                    <h3>Treatment Suggestions:</h3>
+                                    <ul>
+                                        <% if (disease.details.treatment.chemical && disease.details.treatment.chemical.length > 0) { %> <!-- Check if chemical treatments are available -->
+                                            <li><strong>Chemical Treatment:</strong> <%= disease.details.treatment.chemical.join(', ') %></li>
+                                        <% } %>
+                                        <% if (disease.details.treatment.biological && disease.details.treatment.biological.length > 0) { %> <!-- Check if biological treatments are available -->
+                                            <li><strong>Biological Treatment:</strong> <%= disease.details.treatment.biological.join(', ') %></li>
+                                        <% } %>
+                                        <% if (disease.details.treatment.prevention && disease.details.treatment.prevention.length > 0) { %> <!-- Check if prevention treatments are available -->
+                                            <li><strong>Preventative Measures:</strong> <%= disease.details.treatment.prevention.join(', ') %></li>
+                                        <% } %>
+                                    </ul>
+                                <% } %>
                             </div>
-                        <% } %>
-                    </li>
+                        </div>
+                    </div>
                 <% }); %>
-            </ul>
+            </div>
         </div>
     <% } else { %>
         <p>No disease assessment results available.</p>
     <% } %>
+</section>
+</main>
 </body>
 </html>
