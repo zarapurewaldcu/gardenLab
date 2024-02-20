@@ -24,8 +24,12 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Login endpoint
-router.post('/login', async (req, res) => {
+
+router.get('/', function(req, res, next) {
+    res.render('account', { title: 'account' });
+  });
+// account endpoint
+router.post('/account', async (req, res) => {
   try {
     const { email, password } = req.body;
     let user = await User.findOne({ email });
@@ -45,5 +49,10 @@ router.post('/login', async (req, res) => {
     res.status(500).send('Server error');
   }
 });
+
+
+
+
+
 
 module.exports = router;

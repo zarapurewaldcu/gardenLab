@@ -19,11 +19,13 @@ var gardenplannerformRouter = require('./routes/gardenplannerform');
 var usersRouter = require('./routes/users');
 var plantidRouter = require('./routes/plantid');
 var planthealthRouter = require('./routes/planthealth');
-var userRouter = require('./routes/user');
 
 var app = express();
 
 const upload = multer({ dest: 'uploads/' }); // Temporarily save files to "uploads" directory
+const accountRouter = require('./routes/account');
+const createaccountRouter = require('./routes/createaccount');
+
 
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
@@ -88,14 +90,14 @@ app.use(express.static(path.join(__dirname, '../frontend/public')));
 
 
 
-app.use('/index', indexRouter);
+app.use('/', indexRouter);
 app.use('/virtualgarden', virtualRouter);
-app.use('/gardenplannerform', gardenplannerformRouter);
 app.use('/users', usersRouter);
 app.use('/plantid', plantidRouter);
 //app.use('/plantidresults', plantidRouter);
 app.use('/planthealth', planthealthRouter);
-app.use('/api/user', userRouter);
+app.use('/account', accountRouter);
+app.use('/createaccount', createaccountRouter);
 
 
 
