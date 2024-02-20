@@ -11,7 +11,7 @@
     <% if (data.input && data.input.images) { %> <!-- Check for an uploaded image -->
         <div>
             <h2>Uploaded Image:</h2>
-            <img src="<%= data.input.images[0] %>" alt="Uploaded Image" style="width:  100%; max-width:  500px;">
+            <img src="<%= data.input.images[0] %>" alt="Uploaded Image" style="width: 100%; max-width: 500px;">
         </div>
     <% } %>
     
@@ -19,30 +19,30 @@
         <div>
             <h2>Disease Assessments:</h2>
             <ul class="assessments">
-                <% data.result.disease.suggestions.slice(0,  3).forEach(function(disease) { %> <!-- Display three disease assessments -->
+                <% data.result.disease.suggestions.forEach(function(disease) { %> <!-- Display disease assessments -->
                     <li class="assessment">
                         <h3><%= disease.name %></h3>
-                        <p>Probability: <%= (disease.probability *  100).toFixed(2) %>%</p>
-                        <% if (disease.similar_images && disease.similar_images.length >  0) { %>
+                        <p>Probability: <%= (disease.probability * 100).toFixed(2) %>%</p>
+                        <% if (disease.similar_images && disease.similar_images.length > 0) { %>
                             <div>
                                 <h4>Similar Images:</h4>
-                                <% disease.similar_images.slice(0,  3).forEach(function(image) { %> <!-- Display up to three similar images -->
+                                <% disease.similar_images.slice(0, 3).forEach(function(image) { %> <!-- Display up to three similar images -->
                                     <img src="<%= image.url %>" alt="Similar Image" class="assessment-image">
                                 <% }); %>
                             </div>
                         <% } %>
-						<% if (data.result.disease.suggestions.details && data.result.disease.suggestions.details.treatment) { %> <!-- Check if treatment details are available -->
+                        <% if (disease.details && disease.details.treatment) { %> <!-- Check if treatment details are available -->
                             <div>
                                 <h3>Treatment Suggestions:</h3>
                                 <ul>
-                                    <% if (data.result.disease.suggestions.details.treatment.chemical) { %>
-                                        <li><strong>Chemical Treatment:</strong> <%= data.result.disease.suggestions.details.treatment.chemical.join(', ') %></li>
+                                    <% if (disease.details.treatment.chemical && disease.details.treatment.chemical.length > 0) { %> <!-- Check if chemical treatments are available -->
+                                        <li><strong>Chemical Treatment:</strong> <%= disease.details.treatment.chemical.join(', ') %></li>
                                     <% } %>
-                                    <% if (data.result.disease.suggestions.details.treatment.biological) { %>
-                                        <li><strong>Biological Treatment:</strong> <%= data.result.disease.suggestions.details.treatment.biological.join(', ') %></li>
+                                    <% if (disease.details.treatment.biological && disease.details.treatment.biological.length > 0) { %> <!-- Check if biological treatments are available -->
+                                        <li><strong>Biological Treatment:</strong> <%= disease.details.treatment.biological.join(', ') %></li>
                                     <% } %>
-                                    <% if (data.result.disease.suggestions.details.treatment.prevention) { %>
-                                        <li><strong>Prevention Measures:</strong> <%= data.result.disease.suggestions.details.treatment.prevention.join(', ') %></li>
+									<% if (disease.details.treatment.prevention && disease.details.treatment.prevention.length > 0) { %> <!-- Check if prevention treatments are available -->
+                                        <li><strong>Preventative Measures:</strong> <%= disease.details.treatment.prevention.join(', ') %></li>
                                     <% } %>
                                 </ul>
                             </div>

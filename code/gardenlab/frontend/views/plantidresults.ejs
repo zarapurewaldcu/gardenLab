@@ -1,41 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plant Identification Results</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+	<title>Plant Identification Results</title>
 </head>
+
 <body>
-    <h1>Plant Identification Results</h1>
-    
-    <% if (data.input && data.input.images) { %> <!--Check for an uploaded image-->
-        <div>
-            <h2>Uploaded Image:</h2>
-            <img src="<%= data.input.images[0] %>" alt="Uploaded Image" style="width: 100%; max-width: 500px;">
-        </div>
-    <% } %>
-    
-    <% if (data.result && data.result.classification && data.result.classification.suggestions) { %> <!--Ensure that suggestions are available-->
-        <!--If a picture is determined not to contain a plant (is_plant { probability: 0, binary: false, threshold: 0.5 })  Then suggestions will not be given-->
-		<div>
-            <h2>Possible Identifications:</h2>
-            <ul>
-                <% data.result.classification.suggestions.slice(0, 3).forEach(function(suggestion) { %>  <!-- Displays max three possible suggestions for uploaded photo-->
-                    <li>
-                        <strong>Plant Name:</strong> <%= suggestion.name %><br>
-                        <strong>Probability:</strong> <%= (suggestion.probability * 100).toFixed(2) %>%
-                        <% if (suggestion.similar_images && suggestion.similar_images.length > 0) { %>
-                            <div>
-                                <h3>Similar Image:</h3>
-                                <img src="<%= suggestion.similar_images[0].url %>" alt="Similar Image" style="width: 100%; max-width: 300px;">
-                            </div>
-                        <% } %>
-                    </li>
-                <% }); %>
-            </ul>
-        </div>
-    <% } else { %>
-        <p>No identification results available.</p>
-    <% } %>
+	<nav class="container-fluid">
+		<ul>
+			<li><strong>Garden Planner</strong></li>
+		</ul>
+		<ul>
+			<li><a href="/index" role="button">Home</a></li>
+			<li><a href="/virtualgarden">Virtual Garden Planner</a></li>
+			<li><a href="/plantid">Plant ID Tool</a></li>
+			<li><a href="/planthealth">Plant Welfare Checker</a></li>
+			<li><a href="/account" role="button">Account</a></li>
+		</ul>
+	</nav>
+	<main class="container">
+		<section>
+			<h2>Plant Identification Results</h2>
+	
+			<% if (data.input && data.input.images) { %> <!--Check for an uploaded image-->
+				<div>
+					<h3>Uploaded Image:</h3>
+					<img src="<%= data.input.images[0] %>" alt="Uploaded Image" style="width: 40%;">
+				</div>
+			<% } %>
+	
+			<% if (data.result && data.result.classification && data.result.classification.suggestions) { %> <!--Ensure that suggestions are available-->
+				        <!--If a picture is determined not to contain a plant (is_plant { probability: 0, binary: false, threshold: 0.5 })  Then suggestions will not be given-->
+				<div>
+					<hr>
+					<h3>Possible Identifications:</h3>
+					<div class="row"> 
+						<% data.result.classification.suggestions.slice(0, 3).forEach(function(suggestion) { %>   <!-- Displays max three possible suggestions for uploaded photo-->
+							<div class="col-md-6"> 
+								<div class="card" style="width: 18rem;">
+									<img class="card-img-top" src="<%= suggestion.similar_images[0].url %>" alt="Similar Image" style="width: 100%;">
+									<div class="card-body">
+										<ul class="list-group list-group-flush">
+											<li class="list-group-item">
+												<strong>Plant Name:</strong> 
+												<a href="https://www.google.com/search?q=<%= encodeURIComponent(suggestion.name)%> care instructions" target="_blank"> <!-- Search google for plant name and care instructions since they are not provided by the api -->
+													<%= suggestion.name %>
+												</a>
+											</li>
+											<li class="list-group-item">
+												<strong>Probability:</strong> <%= (suggestion.probability * 100).toFixed(2) %>% 
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						<% }); %>
+					</div>
+				</div>
+			<% } else { %>
+				<p>No identification results available.</p>
+			<% } %>
+		</section>
+	</main>
 </body>
+
 </html>
