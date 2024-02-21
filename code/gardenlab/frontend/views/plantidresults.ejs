@@ -30,7 +30,7 @@
 			<% if (data.input && data.input.images) { %> <!--Check for an uploaded image-->
 				<div>
 					<h3>Uploaded Image:</h3>
-					<img src="<%= data.input.images[0] %>" alt="Uploaded Image" style="width: 40%;">
+					<img src="<%= data.input.images[0] %>" alt="Uploaded Image" style="max-width: 16rem;">
 				</div>
 			<% } %>
 	
@@ -40,7 +40,7 @@
 					<hr>
 					<h3>Possible Identifications:</h3>
 					<div class="row"> 
-						<% data.result.classification.suggestions.slice(0, 3).forEach(function(suggestion) { %>   <!-- Displays max three possible suggestions for uploaded photo-->
+						<% data.result.classification.suggestions.slice(0, 6).forEach(function(suggestion) { %>   <!-- Displays max six possible suggestions for uploaded photo-->
 							<div class="col-md-6"> 
 								<div class="card" style="width: 18rem;">
 									<img class="card-img-top" src="<%= suggestion.similar_images[0].url %>" alt="Similar Image" style="width: 100%;">
