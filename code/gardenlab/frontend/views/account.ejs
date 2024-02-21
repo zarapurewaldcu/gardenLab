@@ -7,6 +7,19 @@
         <title>account</title>
     </head>
 <body>
+	<nav class="container-fluid">
+		<ul>
+			<li><strong>Garden Planner</strong></li>
+		</ul>
+		<ul>
+		  <li><a href="/index" role="button">Home</a></li>
+		  <li><a href="/virtualgarden">Virtual Garden Planner</a></li>
+		  <li><a href="/plantid">Plant ID Tool</a></li>
+		  <li><a href="/planthealth">Plant Welfare Checker</a></li>
+		  <li><a href="/account" role="button">Account</a></li>
+	  </ul>
+	</nav>
+	<main class="container">
     <h1>account</h1>
     <form action="/account" method="post">
         <input type="email" name="email" placeholder="Email" required>
@@ -14,5 +27,6 @@
         <button type="submit">LOGIN</button>
     </form>
     <p>Don't have an account? <a href="/createaccount">Register here</a></p>
+	</main>
 </body>
 </html>
