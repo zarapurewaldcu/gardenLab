@@ -3,11 +3,16 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const axios = require('axios');
 const fs = require('fs');
+const session = require('express-session');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 const FormData = require('form-data');
 const mongoose = require('mongoose');
+const User = require('./models/User');
 var router = express.Router();
 require("dotenv").config();
 const gardenModel = require('./models/gardenModel');
@@ -34,7 +39,47 @@ mongoose.connect(process.env.MONGODB_URI, {
   .then(() => console.log('Connected to MongoDB...'))
   .catch(err => console.error('Could not connect to MongoDB:', err));
   
+app.use(session({ // session middleware
+    secret: 'ANISA',
+    resave: false,
+    saveUninitialized: true,
+  }));
+  
+app.use(passport.initialize());
+app.use(passport.session());
 
+passport.serializeUser((user, done) => done(null, user.id));
+// passport.deserializeUser((id, done) => {
+//   User.findById(id, (err, user) => done(err, user)); as Model.findById() no longer accepts a callback
+passport.deserializeUser(async (id, done) => {
+    try {
+      const user = await User.findById(id);
+      done(null, user);
+    } catch (err) {
+      done(err, null);
+    }
+  });
+
+
+passport.use(new LocalStrategy({ usernameField: 'email' },
+  async (email, password, done) => {
+    try {
+      const user = await User.findOne({ email });
+      if (!user) {
+        return done(null, false, { message: 'Incorrect email.' });
+      }
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+
+      return done(null, user);
+    } catch (err) {
+      return done(err);
+    }
+  }
+));
 
   app.post('/planGarden', (req, res) => {
 	const solve = gardenModel.solve({

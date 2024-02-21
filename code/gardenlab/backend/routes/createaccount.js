@@ -41,7 +41,8 @@ router.post('/', async (req, res) => {
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 });
 
     // Response
-    res.status(201).json({ token }); // Send token back to client
+   // res.status(201).json({ token }); // Send token back to client(testing)
+   res.redirect('/account');
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');
