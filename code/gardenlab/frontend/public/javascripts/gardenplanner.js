@@ -13,6 +13,28 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeDraggablePlants();
   });
   
+document.addEventListener('DOMContentLoaded', () => {
+    fetchGardenAndRender();
+});
+
+function fetchGardenAndRender() {
+    fetch('/virtualgarden/userGarden', { credentials: 'include' })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to fetch garden');
+            }
+            return response.json();
+        })
+        .then(gardenData => {
+            renderGarden(gardenData);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+
+
   function createGardenGrid(width, height) {
     const gardenGrid = document.getElementById('gardenGrid');
     gardenGrid.innerHTML = ''; // Clear the grid first
@@ -32,7 +54,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   
-  
+  function renderGarden(gardenData) {
+    const gardenGrid = document.getElementById('gardenGrid');
+    gardenGrid.innerHTML = ''; // Clear the existing grid first
+
+    // Set up the grid based on gardenData.width and gardenData.height
+    gardenGrid.style.gridTemplateColumns = `repeat(${gardenData.width}, 50px)`;
+    gardenGrid.style.gridTemplateRows = `repeat(${gardenData.height}, 50px)`;
+
+    // Populate the grid with plants from gardenData.layout
+    gardenData.layout.forEach(item => {
+        const cell = document.createElement('div');
+        cell.className = 'grid-cell';
+        cell.style.gridColumnStart = item.position.x + 1; 
+        cell.style.gridRowStart = item.position.y + 1;
+
+        const plant = document.createElement('img');
+        plant.src = `../images/${item.plantId}.webp`; 
+        plant.className = 'plant';
+        plant.draggable = false; 
+
+        cell.appendChild(plant);
+        gardenGrid.appendChild(cell);
+    });
+}
   function initializeDraggablePlants() {
     const plants = document.querySelectorAll('.plant');
     plants.forEach(plant => {
@@ -110,14 +155,14 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify(gardenData),
         credentials: 'include', // Necessary for cookies when using sessions
     })
-    .then(response => {
+    .then(response => { // Handle the response
         if (response.ok) {
             return response.json();
         } else {
             throw new Error('Failed to save garden');
         }
     })
-    .then(data => {
+    .then(data => { // Handle the JSON data
         console.log('Success:', data);
         alert('Garden saved successfully!');
     })

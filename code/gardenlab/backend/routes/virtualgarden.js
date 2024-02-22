@@ -7,6 +7,24 @@ router.get('/', function(req, res, next) {
 });
 
 
+router.get('/userGarden', async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Not authenticated' });
+  }
+
+  try {
+    const user = await User.findById(req.user._id).populate('garden');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user.garden);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error retrieving garden' });
+  }
+});
+
 router.post('/', async (req, res) => {
   if (!req.user) {
     return res.status(401).json({ message: 'Not authenticated' });

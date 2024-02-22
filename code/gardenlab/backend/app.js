@@ -135,7 +135,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 
 
-
 app.use('/', indexRouter);
 app.use('/virtualgarden', virtualRouter);
 app.use('/users', usersRouter);
