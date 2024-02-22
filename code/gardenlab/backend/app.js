@@ -47,6 +47,7 @@ app.use(session({ // session middleware
   
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(express.json());
 
 passport.serializeUser((user, done) => done(null, user.id));
 // passport.deserializeUser((id, done) => {
@@ -80,6 +81,7 @@ passport.use(new LocalStrategy({ usernameField: 'email' },
     }
   }
 ));
+
 
   app.post('/planGarden', (req, res) => {
 	const solve = gardenModel.solve({
@@ -127,7 +129,6 @@ app.set('view engine', 'ejs');
 
 
 app.use(logger('dev'));
-app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 //app.use(express.static(path.join(__dirname, 'public')));

@@ -19,15 +19,19 @@ document.addEventListener('DOMContentLoaded', () => {
     gardenGrid.style.gridTemplateColumns = `repeat(${width}, 50px)`;
     gardenGrid.style.gridTemplateRows = `repeat(${height}, 50px)`;
   
-    for (let i = 0; i < width * height; i++) {
-      const cell = document.createElement('div');
-      cell.className = 'grid-cell';
-      cell.dataset.index = i; // Assign an index to each cell for identification
-      cell.addEventListener('dragover', allowDrop);
-      cell.addEventListener('drop', drop);
-      gardenGrid.appendChild(cell);
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const cell = document.createElement('div');
+        cell.className = 'grid-cell';
+        cell.dataset.x = x;
+        cell.dataset.y = y;
+        cell.addEventListener('dragover', allowDrop);
+        cell.addEventListener('drop', drop);
+        gardenGrid.appendChild(cell);
+      }
     }
   }
+  
   
   function initializeDraggablePlants() {
     const plants = document.querySelectorAll('.plant');
@@ -44,44 +48,94 @@ document.addEventListener('DOMContentLoaded', () => {
   function allowDrop(ev) {
     ev.preventDefault();
   }
-  
+
+
   function drop(ev) {
     ev.preventDefault();
     const data = ev.dataTransfer.getData("text");
     const originalPlant = document.getElementById(data);
     const clone = originalPlant.cloneNode(true);
-  
-    // Give the clone a new unique ID
+
     clone.id = "clone_" + Date.now();
-  
+    clone.setAttribute('original-id', originalPlant.id); //storing og id instead of clone id
+
     if (ev.target.className.includes('grid-cell') && !ev.target.firstChild) {
-      // Fit the clone inside the grid cell
-      clone.style.width = '100%';
-      clone.style.height = '100%';
-      ev.target.appendChild(clone);
-      ev.target.classList.add('occupied');
-      document.getElementById('saveGarden').disabled = false;
+        clone.style.width = '100%';
+        clone.style.height = '100%';
+        ev.target.appendChild(clone);
+        ev.target.classList.add('occupied');
+        document.getElementById('saveGarden').disabled = false;
     }
-  }
-  
+}
+
+
   
   function collectGardenData() {
-    // Collect the garden state data for saving
     const cells = document.querySelectorAll('.grid-cell');
-    const gardenState = Array.from(cells).map(cell => {
-      return cell.firstChild ? cell.firstChild.className : null;
-    });
-    
+    const layout = Array.from(cells).map(cell => {
+        const plant = cell.querySelector('.plant');
+        // Use 'original-id' if present, otherwise fall back to the plant's own ID
+        const plantId = plant ? (plant.getAttribute('original-id') || plant.id) : null;
+        if (plant && plantId.startsWith("clone_")) {
+            // If plantId still starts with "clone_", it means the original ID wasn't correctly assigned/found
+            console.error("Original ID not found for:", plantId);
+            return null; // Skip the plant
+        }
+        return plantId ? {
+            plantId: plantId, // Use the corrected plant ID
+            position: {
+                x: parseInt(cell.dataset.x, 10),
+                y: parseInt(cell.dataset.y, 10)
+            }
+        } : null;
+    }).filter(item => item !== null); // Remove cells without plants or with incorrect IDs
+
     return {
-      width: parseInt(document.getElementById('width').value, 10),
-      height: parseInt(document.getElementById('height').value, 10),
-      plants: gardenState
+        width: parseInt(document.getElementById('width').value, 10),
+        height: parseInt(document.getElementById('height').value, 10),
+        layout: layout
     };
-  }
+}
+ 
+
+  
   
   function saveGarden(gardenData) {
-    // Implement the AJAX request to send gardenData to the server
-    console.log('Saving garden data:', gardenData);
-    // Add fetch request here
-  }
+    //AJAX request
+    fetch('/virtualgarden', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(gardenData),
+        credentials: 'include', // Necessary for cookies when using sessions
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();
+        } else {
+            throw new Error('Failed to save garden');
+        }
+    })
+    .then(data => {
+        console.log('Success:', data);
+        alert('Garden saved successfully!');
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('Error saving garden. Please try again.');
+    });
+}
+
+
+
+const saveGardenButton = document.getElementById('saveGarden');
+if (saveGardenButton) {
+    saveGardenButton.addEventListener('click', function() {
+        const gardenData = collectGardenData();
+        saveGarden(gardenData);
+    });
+} else {
+    console.error('The saveGarden button was not found.');
+}
   
