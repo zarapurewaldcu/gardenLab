@@ -1,4 +1,4 @@
-```markdown
+
 # Navigating GardenLab - A User’s Guide
 
 **Authors:** Anisa Hoxha - 21413586, Zara Purewal - 21404176
