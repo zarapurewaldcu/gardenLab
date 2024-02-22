@@ -24,6 +24,7 @@ var gardenplannerformRouter = require('./routes/gardenplannerform');
 var usersRouter = require('./routes/users');
 var plantidRouter = require('./routes/plantid');
 var planthealthRouter = require('./routes/planthealth');
+var helloRouter = require('./routes/hello');
 
 var app = express();
 
@@ -142,6 +143,7 @@ app.use('/plantid', plantidRouter);
 //app.use('/plantidresults', plantidRouter);
 app.use('/planthealth', planthealthRouter);
 app.use('/account', accountRouter);
+app.use('/hello', helloRouter);
 app.use('/createaccount', createaccountRouter);
 app.use('/gardenplannerform', gardenplannerformRouter);
 

@@ -8,17 +8,22 @@ const jwt = require('jsonwebtoken');
 // Load environment variables
 require('dotenv').config();
 
-// Serve the login page
-router.get('/', (req, res) => {
-  res.render('account', { title: 'Login' });
-});
+
 
 
 router.post('/', passport.authenticate('local', {
-  successRedirect: '/virtualgarden', // Redirect to the virtual garden page on successful login
+  successRedirect: '/hello', // Redirect to the hello page on successful login
   failureRedirect: '/account', // Redirect back to the login page on failure
   //failureFlash: true - maybe implement falsh error messages later on
 }));
+
+router.get('/', (req, res) => {
+  if (req.isAuthenticated()) { // Check if user is already logged in
+    res.redirect('/hello'); // Redirect to the hello page
+  } else {
+    res.render('account', { title: 'Login' }); // Show the login page
+  }
+});
 // Handle login
 // router.post('/', async (req, res) => {
 //   const { email, password } = req.body;
