@@ -82,43 +82,106 @@ passport.use(new LocalStrategy({ usernameField: 'email' },
   }
 ));
 
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-  app.post('/planGarden', (req, res) => {
-	const solve = gardenModel.solve({
-	  options: {
-		solver: 'gecode',
-		'time-limit':  10000,
-		statistics: true,
-		log:true
-	  }
-	});
 
-	solve.on('solution', (solution) => {
-		console.log(solution.output);
-		res.json({solution:solution});
-	  });
+app.post('/planGarden', (req, res) => {
+    const { numberOfPlants, soilType, shadeType } = req.body;
+	let soilTypeNumber; // Convert choosen soil type to number for use in mzn file
+    switch (soilType) {
+        case 'normal':
+            soilTypeNumber = 1;
+            break;
+        case 'clay':
+            soilTypeNumber = 2;
+            break;
+        case 'dry':
+            soilTypeNumber = 3;
+            break;
+        default:
+            soilTypeNumber = 0; // Default or error value, adjust as needed
+    }
 
-	  solve.on('exit', (result) => {
-		console.log(result);
-		// Send the result back to the client
-		res.json({
-		  result: result,
-		});
-	  });
+	let shadeTypeNumber; // Convert choosen shade type to number for use in mzn file
+    switch (shadeType) {
+        case 'fullShade':
+            shadeTypeNumber = 1;
+            break;
+        case 'halfShade':
+            shadeTypeNumber = 2;
+            break;
+        case 'fullSun':
+            shadeTypeNumber = 3;
+            break;
+        default:
+            shadeTypeNumber = 0; // Default or error value, adjust as needed
+    }
+    // Create a string to save to the file
+    const formData = `limit = ${numberOfPlants}; gardenSoilType = ${soilTypeNumber}; gardenShadeType = ${shadeTypeNumber};`;
 
-	//   solve.on('trace', (log) => {
-	// 	console.log(log); // Log the solver's log output
-	// 	res.json({log:log});
-	//   });
+    // Specify the file path and name
+    const filePath = path.join(__dirname, './minizinc/gardenFormData.dzn');
+
+    // Append the form data to the file
+    fs.writeFile(filePath, formData, (err) => {
+        if (err) {
+            console.error('Error writing to file', err);
+            res.send('Error saving form data');
+        } else {
+            console.log('Form data saved successfully');
+            // Render a different page after saving
+            res.render('gardenplanner', { formData: req.body }); // Assuming you have a template named 'differentPage.ejs'
+        }
+    });
+});
+
+
+// old code, trying to get javascript api for minizinc to work
+//-------------------------------------------------------
+//   app.post('/planGarden', (req, res) => {
+// 	const solve = gardenModel.solve({
+// 	  options: {
+// 		solver: 'gecode',
+// 		'time-limit':  10000,
+// 		statistics: true,
+// 		log:true
+// 	  }
+// 	});
+
+// 	solve.on('solution', (solution) => {
+// 		console.log(solution.output);
+// 		res.json({solution:solution});
+// 	  });
+
+// 	  solve.on('warning', (warning) => {
+// 		console.log(result);
+// 		// Send the result back to the client
+// 		res.json({
+// 		  warning:warning,
+// 		});
+// 	  });
+
+// 	  solve.on('exit', (result) => {
+// 		console.log(result);
+// 		// Send the result back to the client
+// 		res.json({
+// 		  result: result,
+// 		});
+// 	  });
+
+// 	//   solve.on('trace', (log) => {
+// 	// 	console.log(log); // Log the solver's log output
+// 	// 	res.json({log:log});
+// 	//   });
 	
-	  solve.on('error', (error) => {
-		console.error('An error occurred while solving the model:', error);
-		// Send an error response back to the client
-		res.status(500).send('An error occurred while solving the model.');
-	  });
+// 	  solve.on('error', (error) => {
+// 		console.error('An error occurred while solving the model:', error);
+// 		// Send an error response back to the client
+// 		res.status(500).send('An error occurred while solving the model.');
+// 	  });
   
-  });
-  
+//   });
+//------------------------------------------------------- 
 
   
 

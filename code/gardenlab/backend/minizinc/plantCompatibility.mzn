@@ -7,9 +7,9 @@ enum plants;
 % enum pStats;
 % enum gStats;
 
-int: limit = 3;
-int: gardenSoilType = 1;
-int: gardenShadeType = 3;
+int: limit;
+int: gardenSoilType;
+int: gardenShadeType;
 
 enum pStats = {plantType, soilType, shadeType, watering, season}; %What each column represents on statsPerPlant
 % enum gStats = {gardenSoilType, gardenShadeType}; %What each column represents on statsPerPlot
@@ -17,8 +17,6 @@ enum pStats = {plantType, soilType, shadeType, watering, season}; %What each col
 array[plants, pStats] of int: statsPerPlant; 
 % array[1..limit, gStats] of int: statsPerPlot;
 
-% Create a mapping from enum values to strings
-array[plants] of string: plantNames = ["Rose", "Tulip", "Daisy", "Orchid", "Lavender", "Sunflower", "Walnut", "Iris", "Basil", "Fern"];
 
 array[1..limit] of var plants: chosenPlants; % Final list of the plant that were chosen 
 
@@ -39,8 +37,8 @@ array[1..limit] of var plants: chosenPlants; % Final list of the plant that were
 % );
 constraint alldifferent(chosenPlants);
 constraint forall(i in 1..limit)(
-    statsPerPlant[chosenPlants[i], soilType] = gardenSoilType /\
-    statsPerPlant[chosenPlants[i], shadeType] = gardenShadeType
+    statsPerPlant[chosenPlants[i], soilType] == gardenSoilType /\
+    statsPerPlant[chosenPlants[i], shadeType] == gardenShadeType
 );
 
 % Solve statement

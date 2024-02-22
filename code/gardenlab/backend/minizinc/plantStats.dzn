@@ -1,4 +1,10 @@
-plants = { Rose, Tulip, Daisy, Orchid, Lavender, Sunflower, Walnut, Iris, Basil, Fern };
+plants = {
+    Rose, Tulip, Daisy, Orchid, Lavender, Sunflower, Walnut, Iris, Basil, Fern,
+    Honeymelon, Grape, Apple, Parsnip, Thyme, Watermelon, Damson, BokChoy, Carrot,
+    Maple, Marigold, Daikon, Chamomile, Blueberry, Rosemary, Oregano, Coriander,
+    Parsley, Chives, Potato, Blackberry, Raspberry, Daffodil, Radish, Strawberry,
+    Lettuce, Celery, Chrysanthemum, Peony, SweetPea, Onion, Leek, Shallot, Mint,
+    BayLeaf, Courgette, Gooseberry};
 % pStats = {plantName, plantType, soilType, shadeType, watering, season};
 % plantType = {Fruit, Vegetable, Tree, Herb};
 % soilType = {Normal, Clay, Dry};
@@ -33,6 +39,43 @@ statsPerPlant = [|
     3,  1,  3,  2,  1| % Lavender
     3,  1,  3,  2,  1| % Sunflower
     4,  2,  3,  2,  1| % Walnut (tree, clay soil)
-    3,  1,  3,  2,  1| % Iris
-    5,  1,  3,  2,  1| % Basil (herb)
-    5,  1,  3,  2,  1|]; % Fern (herb)
+    3,  1,  2,  2,  1| % Iris
+    5,  1,  2,  2,  1| % Basil (herb)
+    5,  1,  2,  2,  1| % Fern (herb)
+    1,  1,  1,  2,  3| % honeymelon
+    1,  1,  1,  4,  3| % grape
+    4,  1,  1,  1,  2| % apple
+    2,  1,  1,  3,  3| % parsnip
+    5,  1,  1,  3,  2| % thyme
+    1,  1,  2,  4,  4| % watermelon
+    1,  2,  1,  4,  3| % damson
+    2,  2,  1,  2,  2| % bok choy
+    2,  2,  1,  3,  4| % carrot
+    4,  2,  1,  2,  1| % maple
+    3,  2,  1,  3,  4| % marigold
+    2,  2,  2,  2,  2| % daikon
+    3,  2,  2,  1,  4| % chamomille
+    1,  2,  2,  1,  4| % blueberry
+    5,  2,  2,  1,  3| % rosemary
+    5,  2,  2,  1,  3| % oregano
+    5,  2,  3,  2,  1| % corriander
+    5,  2,  3,  1,  1| % parsely
+    5,  2,  3,  1,  1| % chives
+    2,  2,  3,  3,  3| % potato
+    1,  2,  3,  1,  1| % blackberry
+    1,  3,  1,  1,  1| % raspberry
+    3,  3,  1,  2,  4| % daffodil
+    2,  3,  1,  3,  4| % raddish
+    1,  3,  1,  3,  2| % strawberry
+    2,  3,  1,  2,  2| % lettuce
+    2,  3,  2,  2,  2| % celery
+    3,  3,  2,  3,  3| % chrysanthemum
+    3,  3,  2,  1,  2| % peony
+    3,  3,  2,  1,  1| % sweat pea
+    2,  3,  2,  1,  1| % onion
+    2,  3,  3,  2,  4| % leek
+    2,  3,  3,  2,  1| % shallot
+    5,  3,  3,  3,  3| % mint
+    5,  3,  3,  2,  1| % bayleaf
+    2,  3,  3,  2,  1| % corguette
+    1,  3,  3,  1,  4|]; % gooseberry
