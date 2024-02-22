@@ -53,7 +53,7 @@ function fetchGardenAndRender() {
       }
     }
   }
-  
+
   function renderGarden(gardenData) {
     const gardenGrid = document.getElementById('gardenGrid');
     gardenGrid.innerHTML = ''; // Clear the existing grid first
@@ -62,22 +62,37 @@ function fetchGardenAndRender() {
     gardenGrid.style.gridTemplateColumns = `repeat(${gardenData.width}, 50px)`;
     gardenGrid.style.gridTemplateRows = `repeat(${gardenData.height}, 50px)`;
 
-    // Populate the grid with plants from gardenData.layout
+    // Create a map for easy lookup of plants by position
+    const plantPositionMap = {};
     gardenData.layout.forEach(item => {
-        const cell = document.createElement('div');
-        cell.className = 'grid-cell';
-        cell.style.gridColumnStart = item.position.x + 1; 
-        cell.style.gridRowStart = item.position.y + 1;
-
-        const plant = document.createElement('img');
-        plant.src = `../images/${item.plantId}.webp`; 
-        plant.className = 'plant';
-        plant.draggable = false; 
-
-        cell.appendChild(plant);
-        gardenGrid.appendChild(cell);
+        const key = `${item.position.x}-${item.position.y}`;
+        plantPositionMap[key] = item.plantId;
     });
+
+    // Populate the grid with cells, adding plants where available
+    for (let y = 0; y < gardenData.height; y++) {
+        for (let x = 0; x < gardenData.width; x++) {
+            const cell = document.createElement('div');
+            cell.className = 'grid-cell';
+            cell.style.gridColumnStart = x + 1;
+            cell.style.gridRowStart = y + 1;
+
+            const key = `${x}-${y}`;
+            if (plantPositionMap[key]) {
+                const plantId = plantPositionMap[key];
+                const plant = document.createElement('img');
+                plant.src = `../images/${plantId}.webp`; 
+                plant.className = 'plant';
+                plant.draggable = false; 
+                cell.appendChild(plant);
+            }
+
+            gardenGrid.appendChild(cell);
+        }
+    }
 }
+
+
   function initializeDraggablePlants() {
     const plants = document.querySelectorAll('.plant');
     plants.forEach(plant => {
