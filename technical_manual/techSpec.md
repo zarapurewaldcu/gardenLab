@@ -215,14 +215,202 @@ The app is designed in a way that should be intuitive to your average user. This
 
 ### 7.1 Learning Resources
 
-Listed resources were used to gain knowledge on MiniZinc, API integration, and other technical aspects of the project.
+The following resources have been used as learning materials over the course of this project
+
+-   <https://www.minizinc.org/doc-2.8.2/en/part_2_tutorial.html> - Tutorial of all major aspects of modelling in MiniZinc, as well as practice exercises.
+
+-   <https://www.youtube.com/playlist?list=PLj8827bRIwAuv2ZEaqaaZxddSXiMb2dML> - a series of online lectures and practice exercises on modelling in MiniZinc
+
+-   <https://www.youtube.com/watch?v=rT1g_hLs_5A> - Online lecture about enumerated types in MiniZinc
+
+<https://people.eng.unimelb.edu.au/pstuckey/papers/cpaior-typex.pdf> - "Enumerated Types and Type Extensions for MiniZinc" - Lecture notes from Monash University, Melbourne, Australia
+
 
 ### 7.2 Referential Resources
 
-References for API documentation, express.js routing, file handling with multer, and environment variable management with dotenv.
+The following sources were used as references  for different parts of the project 
+
+-   <https://plant.id/docs> -  API used for Plant Identification Tool and Plant Welfare Assessment Tool.
+
+-   <https://expressjs.com/>  - Used as a reference for routing using the express framework for node.js.
+
+-   <https://copyprogramming.com/howto/how-to-post-form-data-using-axios-in-node>  - Used as a reference when using axios to post form data.
+
+-   <https://expressjs.com/en/resources/middleware/multer.html> - Used as a reference for using multer to process image files in form data when posting to an API.
+
+-   <https://www.mickpatterson.com.au/blog/how-to-use-environment-variables-in-nodejs-with-express-and-dotenv> - Used as a reference for using dotenv to use custom environment variables
+
+-   <https://js.minizinc.dev/docs/stable/modules.html> - Used as a reference for the MiniZinc Javascript module for nodejs
+
+-   <https://github.com/MiniZinc/minizinc-js/blob/develop/types/index.d.ts> - Used as a reference for the MiniZinc Javascript module for nodejs
+
+-   <https://www.tutorialspoint.com/how-to-allow-only-positive-numbers-in-the-input-number-type#:~:text=To%20sum%20it%20up%2C%20the,numbers%20in%20the%20input%20field>. - Only positive numbers allowed in a form, used for virtual garden planner 
+
+-   <https://stackoverflow.com/questions/48808077/staying-logged-in-after-logging-out-with-express-and-mongodb>  - passport and sessions
+
+-   <https://stackoverflow.com/questions/43492717/how-to-keep-user-logged-in-even-after-reloading-the-main-file-index-js> - also passport and sessions
+
+-   <https://www.passportjs.org/concepts/authentication/sessions/> - helpful guide for passport sessions
+
+-   <https://medium.com/geekculture/web-based-multi-screen-apps-including-drag-drop-5e161da6507b>  - Reference for drag and drop functionalities in virtual garden
+
+-   <https://www.mongodb.com/docs/drivers/node/v4.1/>  - step by step guide how to use mongodb with nodejs
+
+-   <https://www.mindbowser.com/login-form-using-node-js-and-mongodb/>  - login form sample
+
+-   <https://www.bezkoder.com/node-js-express-login-mongodb/>  - node with mongo db sample guide
+
+<https://www.geeksforgeeks.org/login-form-using-node-js-and-mongodb/>  - using mongo with passport for form registation
 
 ## 8. Appendices
 
 ### Code for plantuml diagrams
 
-Includes UML diagrams for use cases, login sequences, plant identification, plant welfare assessment, and virtual garden creation processes.
+Use case Diagram
+
+@startuml
+left to right direction
+actor User as user
+actor MongoDB as db
+actor PlantID as api
+
+package GardenLab {
+usecase "Log into account" as login
+usecase "Create Garden" as creategard
+usecase "Modify Garden" as modgard
+usecase "Save Garden" as savegard
+usecase "Retrieve Garden" as retrievegard
+
+usecase "Identify plant" as idplant
+usecase "Check Plant Wellbeing" as checkplant
+usecase "authenticate" as authenticate
+usecase "Return result" as returnresults
+
+}
+
+user --> login
+user --> creategard
+user --> idplant
+user --> checkplant
+modgard <. creategard : <<precedes>>
+creategard .> retrievegard : <<precedes>>
+authenticate <-- db
+login -- authenticate
+savegard <-- db
+modgard -- savegard
+returnresults <-- api
+idplant -- returnresults
+checkplant -- returnresults
+
+
+@enduml
+
+
+----------------------------------------------
+
+
+Login sequence diagram
+
+@startuml
+
+actor User as user
+participant GardenLab as gl
+database Server as server
+
+user -> gl : Login Request
+activate gl
+gl -> server : Send user login info
+activate server
+server -> server : Authenticate user info
+
+
+alt if successful login
+   server --> gl: Login successful
+   gl -> user : Display homepage
+else
+   server --> gl : Login unsuccessful
+   deactivate server
+   gl -> user : Redirect to log in page
+   deactivate gl
+   end
+
+@enduml
+----------------------------------------------
+For plant identification tool
+
+@startuml
+actor User as user
+participant GardenLab as gl
+participant "PlantID API" as api
+user ->> gl : Upload locally saved image\nto the plant identication form
+user -> gl : Submit form
+activate gl
+gl ->> gl : Saves the image file in\na temporary uploads/ folder
+gl ->> gl : Creates readable data\nstream to send to API
+gl -> api : Posts image to API
+activate api
+api --> gl : Returns Json data
+deactivate api
+gl --> user : Renders data on a webpage
+gl -> gl : Delete image file in temporary folder
+deactivate gl
+@enduml
+
+-----------------------------------------------
+
+For plant welfare assessment tool
+
+@startuml
+actor User as user
+participant GardenLab as gl
+participant "PlantID API" as api
+user ->> gl : Upload locally saved image\nto the plant welfare assessment form
+user -> gl : Submit form
+activate gl
+gl ->> gl : Saves the image file in\na temporary uploads/ folder
+gl ->> gl : Creates readable data\nstream to send to API
+gl -> api : Posts image to API
+activate api
+api --> gl : Returns Json data
+deactivate api
+gl --> user : Renders data on a webpage
+gl -> gl : Delete image file in temporary folder
+deactivate gl
+@enduml
+
+-----------------------------------------------
+
+Sequence diagram for creating virtual garden
+
+@startuml
+
+actor User as user
+participant GardenLab as gl
+database MongoDB as db
+
+ref over user, gl, db : Log in
+
+user -> gl : Navigate to Virtual Garden page
+activate gl
+gl --> user : Display form
+user -> gl : Input form info
+gl ->> gl : Save form info to .dzn file
+gl --> user : Display empty virtual garden
+user -> gl : Input desired width and length of garden
+gl --> user : Update page to display new garden size
+loop until user satisfied with layout
+user -> gl : Drag and drop image of plant\non desired location in garden
+gl -->user : Update page to display changes
+end
+user -> gl : Press save garden button
+gl -> db : Save garden to user's database
+activate db
+db --> gl : Confirm save
+deactivate db
+gl --> user : Confirm save
+deactivate gl
+
+
+
+@enduml
+
