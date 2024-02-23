@@ -207,152 +207,230 @@ The following sources were used as references  for different parts of the projec
 ## 8. Appendices
 
 ### Code for plantuml diagrams
+``` Plantuml Code
 
-Use case Diagram
+---------------------------------------------
+
+Usecase Diagram
 
 @startuml
-left to right direction
-actor User as user
-actor MongoDB as db
-actor PlantID as api
 
-package GardenLab {
+left to right direction
+
+actor User as user
+
+actor Server as server
+
+actor API as api
+
+actor "Constraint Satisfaction Engine" as cse
+
+package GardenPlanner {
+
 usecase "Log into account" as login
+
 usecase "Create Garden" as creategard
+
+usecase "Generate Garden" as gengard
+
 usecase "Modify Garden" as modgard
+
 usecase "Save Garden" as savegard
+
 usecase "Retrieve Garden" as retrievegard
 
+usecase "Change Garden Status" as statusgard
+
 usecase "Identify plant" as idplant
+
 usecase "Check Plant Wellbeing" as checkplant
+
 usecase "authenticate" as authenticate
+
 usecase "Return result" as returnresults
 
 }
 
-user --> login
-user --> creategard
-user --> idplant
-user --> checkplant
-modgard <. creategard : <<precedes>>
-creategard .> retrievegard : <<precedes>>
-authenticate <-- db
-login -- authenticate
-savegard <-- db
-modgard -- savegard
-returnresults <-- api
-idplant -- returnresults
-checkplant -- returnresults
+user --\> login
 
+user --\> creategard
+
+user --\> idplant
+
+user --\> checkplant
+
+modgard \<. creategard : \<\<precedes\>\>
+
+creategard .\> retrievegard : \<\<precedes\>\>
+
+creategard .\> statusgard : \<\<precedes\>\>
+
+authenticate \<-- server
+
+login -- authenticate
+
+gengard \<-- cse
+
+creategard -- gengard
+
+savegard \<-- server
+
+creategard -- savegard
+
+modgard -- savegard
+
+returnresults \<-- api
+
+idplant -- returnresults
+
+checkplant -- returnresults
 
 @enduml
 
-
 ----------------------------------------------
-
 
 Login sequence diagram
 
 @startuml
 
 actor User as user
+
 participant GardenLab as gl
+
 database Server as server
 
-user -> gl : Login Request
-activate gl
-gl -> server : Send user login info
-activate server
-server -> server : Authenticate user info
+user -\> gl : Login Request
 
+activate gl
+
+gl -\> server : Send user login info
+
+activate server
+
+server -\> server : Authenticate user info
 
 alt if successful login
-   server --> gl: Login successful
-   gl -> user : Display homepage
+
+server --\> gl: Login successful
+
+gl -\> user : Display homepage
+
 else
-   server --> gl : Login unsuccessful
-   deactivate server
-   gl -> user : Redirect to log in page
-   deactivate gl
-   end
 
-@enduml
-----------------------------------------------
-For plant identification tool
+server --\> gl : Login unsuccessful
 
-@startuml
-actor User as user
-participant GardenLab as gl
-participant "PlantID API" as api
-user ->> gl : Upload locally saved image\nto the plant identication form
-user -> gl : Submit form
-activate gl
-gl ->> gl : Saves the image file in\na temporary uploads/ folder
-gl ->> gl : Creates readable data\nstream to send to API
-gl -> api : Posts image to API
-activate api
-api --> gl : Returns Json data
-deactivate api
-gl --> user : Renders data on a webpage
-gl -> gl : Delete image file in temporary folder
+deactivate server
+
+gl -\> user : Display error page
+
 deactivate gl
-@enduml
 
------------------------------------------------
-
-For plant welfare assessment tool
-
-@startuml
-actor User as user
-participant GardenLab as gl
-participant "PlantID API" as api
-user ->> gl : Upload locally saved image\nto the plant welfare assessment form
-user -> gl : Submit form
-activate gl
-gl ->> gl : Saves the image file in\na temporary uploads/ folder
-gl ->> gl : Creates readable data\nstream to send to API
-gl -> api : Posts image to API
-activate api
-api --> gl : Returns Json data
-deactivate api
-gl --> user : Renders data on a webpage
-gl -> gl : Delete image file in temporary folder
-deactivate gl
-@enduml
-
------------------------------------------------
-
-Sequence diagram for creating virtual garden
-
-@startuml
-
-actor User as user
-participant GardenLab as gl
-database MongoDB as db
-
-ref over user, gl, db : Log in
-
-user -> gl : Navigate to Virtual Garden page
-activate gl
-gl --> user : Display form
-user -> gl : Input form info
-gl ->> gl : Save form info to .dzn file
-gl --> user : Display empty virtual garden
-user -> gl : Input desired width and length of garden
-gl --> user : Update page to display new garden size
-loop until user satisfied with layout
-user -> gl : Drag and drop image of plant\non desired location in garden
-gl -->user : Update page to display changes
 end
-user -> gl : Press save garden button
-gl -> db : Save garden to user's database
-activate db
-db --> gl : Confirm save
-deactivate db
-gl --> user : Confirm save
-deactivate gl
-
-
 
 @enduml
 
+-----------------------------------------------
+
+Create Garden
+
+@startuml
+
+actor User as user
+
+participant GardenLab as gl
+
+database Server as server
+
+participant "Constraint Satisfaction Engine" as cse
+
+user -\> gl : Request to Create Garden
+
+activate gl
+
+gl -\> cse : Send info
+
+activate cse
+
+alt Valid gaden possible
+
+cse --\> gl : Return Generated Garden
+
+gl --\> user : Display garden to user
+
+else Valid garden not possible
+
+cse --\> gl : Return two options for Generated garden
+
+deactivate cse
+
+gl --\> user : Ask user to choose one of the options
+
+user -\> gl : Select desired garden
+
+gl --\> user : Display garden to user
+
+end
+
+loop until user is satisfied with garden
+
+user -\> gl : Modify Garden
+
+gl --\> user : Return modified garden
+
+end
+
+user -\> gl : Save Garden
+
+gl -\> server : Save Garden
+
+deactivate gl
+
+@enduml
+
+---------------------------------------------------
+
+Changing status of garden
+
+@startuml
+
+actor User as user
+
+participant GardenLab as gl
+
+database Server as server
+
+user -\> gl : Request to retrieve virtual garden
+
+activate gl
+
+gl -\> server : Retrieve garden
+
+activate server
+
+server --\> gl : Return garden
+
+deactivate server
+
+gl --\> user : Display garden
+
+alt Changing status of whole garden
+
+user -\> gl : Change whole garden status to real
+
+gl -\> server : Save status as real
+
+else Changing status of part of garden
+
+user -\> gl : Mark section that user wishes to change the status of
+
+user -\> gl : Change status of section to real
+
+gl -\> server : Save section as a new garden and set status to real
+
+deactivate gl
+
+end
+
+@enduml
+
+```
