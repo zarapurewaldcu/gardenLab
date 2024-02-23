@@ -40,8 +40,10 @@ GardenLab is a garden planning assistance website. It has three main features; A
 
 ## 2. What You Need
 
-- A computer with browser
-- An internet connection
+- A computer with a browser.
+- An internet connection.
+- An email is required for registering for an account.
+- An image saved locally to the users machine. (required for plant identification tool and plant welfare assessment tool.)
 
 ## 3. How to Register
 
