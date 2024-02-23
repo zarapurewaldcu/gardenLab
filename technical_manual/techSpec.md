@@ -209,11 +209,30 @@ The app is designed in a way that should be intuitive to your average user. This
 
 ### Prerequisites:
 
-- Web browser, stable internet connection, text editor, command-line terminal, Node.js, Git.
+Before beginning the installation of GardenLab, ensure you have the following:
 
-## 7. Resources
+An up-to-date web browser and stable internet connection
+A text editor of your choice (e.g. Visual Studio Code)
+Access to a command-line terminal
+Node.js installed on your system (v20.11.1 is latest)
+Git for version control
 
-### 7.1 Learning Resources
+- Go to the git repository https://gitlab.computing.dcu.ie/purewaz2/2024-ca326-gardenlab and copy this link
+- Run “git clone https://gitlab.computing.dcu.ie/purewaz2/2024-ca326-gardenlab” in your terminal to download the project files
+- Navigate to the directory where the package.json file is in order to install dependencies for the project “cd 2024-ca326-gardenlab/code/gardenlab/backend”
+- Run “npm install” in the terminal, packages will begin downloading.
+- Install MongoDB from the MongoDB website and create an Atlas account
+- Connect this database to this server through your unique connection string. Save this in your own .env file like so. MONGODB_URI=mongodb+srv://zarapurewal2:zara@cluster.4ixllyf.mongodb.net/
+- Ensure you have added your current IP address to the project in MongoDB Atlas “network” section.
+- For PlantID and plant disease features to work you will need to sign up for an API key on https://plant.id/
+- Put this key in your .env file located in the backend folder. PLANTID_API_KEY = byC6XX9DWgaBYohdr914G3G1vaSWkka3YqQAOYKjqETlnQANEw
+- Add your own text for secret to hash passwords in Database properly “secret=for hashing passwords”
+- Run “npm start” in terminal
+- Open up your web browser and go to http://localhost:3000 and the web app will load up
+
+## 8. Resources
+
+### 8.1 Learning Resources
 
 The following resources have been used as learning materials over the course of this project
 
@@ -223,7 +242,7 @@ The following resources have been used as learning materials over the course of 
 
 -   <https://www.youtube.com/watch?v=rT1g_hLs_5A> - Online lecture about enumerated types in MiniZinc
 
-<https://people.eng.unimelb.edu.au/pstuckey/papers/cpaior-typex.pdf> - "Enumerated Types and Type Extensions for MiniZinc" - Lecture notes from Monash University, Melbourne, Australia
+-   <https://people.eng.unimelb.edu.au/pstuckey/papers/cpaior-typex.pdf> - "Enumerated Types and Type Extensions for MiniZinc" - Lecture notes from Monash University, Melbourne, Australia
 
 
 ### 7.2 Referential Resources
@@ -260,7 +279,7 @@ The following sources were used as references  for different parts of the projec
 
 -   <https://www.bezkoder.com/node-js-express-login-mongodb/>  - node with mongo db sample guide
 
-<https://www.geeksforgeeks.org/login-form-using-node-js-and-mongodb/>  - using mongo with passport for form registation
+-   <https://www.geeksforgeeks.org/login-form-using-node-js-and-mongodb/>  - using mongo with passport for form registation
 
 ## 8. Appendices
 
