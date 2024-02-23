@@ -131,7 +131,7 @@ app.post('/planGarden', (req, res) => {
         } else {
             console.log('Form data saved successfully');
             // Render a different page after saving
-            res.render('gardenplanner', { formData: req.body }); // Assuming you have a template named 'differentPage.ejs'
+            res.render('gardenplanner', { formData: req.body }); // Send the form data back to the client
         }
     });
 });
