@@ -198,4 +198,8 @@ if (saveGardenButton) {
 } else {
     console.error('The saveGarden button was not found.');
 }
-  
+
+if (typeof module !== 'undefined' && module.exports) {//testing
+  exports.createGardenGrid = createGardenGrid;
+
+}
