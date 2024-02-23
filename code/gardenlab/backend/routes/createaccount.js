@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const jwt = require('jsonwebtoken');
 const User = require('../models/User'); 
 
 require('dotenv').config();
@@ -38,7 +37,7 @@ router.post('/', async (req, res) => {
       }
     };
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 });
+   
 
     // Response
    // res.status(201).json({ token }); // Send token back to client(testing)
