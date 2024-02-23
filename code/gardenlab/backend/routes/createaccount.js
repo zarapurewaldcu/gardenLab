@@ -7,7 +7,7 @@ require('dotenv').config();
 
 
 router.get('/', (req, res) => {
-    res.render('createaccount'); // This assumes your EJS file is named createaccount.ejs
+    res.render('createaccount'); // Show the create account page
 });
 
   
